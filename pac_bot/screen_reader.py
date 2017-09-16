@@ -1,7 +1,8 @@
+import time
+
 import cv2
 import numpy as np
 import pyscreenshot as ImageGrab
-from pymouse import PyMouse, PyMouseEvent
 
 
 class ScreenReader(object):
@@ -20,7 +21,7 @@ class ScreenReader(object):
         self.origin = origin
         self.terminus = terminus
 
-    def capture(self, quit_on='q'):
+    def capture(self, quit_on='q', verbose=False):
         """Start capturing the designated part of the screen.
 
         Args:
@@ -29,10 +30,12 @@ class ScreenReader(object):
         Returns:
             None
         """
-
         while True:
+            frame_start_time = time.time()
             screen = np.array(ImageGrab.grab(bbox=(*self.origin, *self.terminus)))
             cv2.imshow('window', cv2.cvtColor(screen, cv2.COLOR_BGR2RGB))
-            if cv2.waitKey(30) == ord(quit_on):
+            if verbose:
+                print('Time since last frame: {}'.format(time.time() - frame_start_time))
+            if cv2.waitKey(30) & 0xFF == ord(quit_on):
                 cv2.destroyAllWindows()
                 break
