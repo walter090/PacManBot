@@ -12,7 +12,7 @@ def commence(countdown=5):
         None
     """
     for i in range(countdown):
-        print(5 - i, end=' ')
+        print(countdown - i, end=' ')
         time.sleep(0.25)
         print('.', end=' ')
         time.sleep(0.25)
