@@ -123,7 +123,6 @@ def batch_normalize(x, epsilon=1e-5):
 
 def flatten(x):
     """Flatten a tensor for the fully connected layer.
-    Each image in a batch is flattened.
 
     Args:
         x(Tensor): 4-D tensor of shape [batch, height, width, channels] to be flattened
