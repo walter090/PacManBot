@@ -15,7 +15,7 @@ def conv_layer(x,
     """Convolution-LReLU-max pooling layers.
 
         This function takes the input and returns the output of the result after
-        a convolution layer and an optional average pooling layer.
+        a convolution layer and an optional max pooling layer.
 
         Args:
             x: Input from the previous layer.
