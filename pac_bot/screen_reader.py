@@ -2,7 +2,7 @@ import time
 
 import cv2
 import numpy as np
-import pyscreenshot as ImageGrab
+import pyscreenshot as image_grab
 
 
 def capture(origin, terminus, quit_on='q', verbose=False):
@@ -23,10 +23,11 @@ def capture(origin, terminus, quit_on='q', verbose=False):
     """
     while True:
         frame_start_time = time.time()
-        screen = np.array(ImageGrab.grab(bbox=(origin, terminus)))
+        screen = np.array(image_grab.grab(bbox=(*origin, *terminus)))
         cv2.imshow('window', cv2.cvtColor(screen, cv2.COLOR_BGR2RGB))
         if verbose:
             print('Time since last frame: {}'.format(time.time() - frame_start_time))
         if cv2.waitKey(30) & 0xFF == ord(quit_on):
-            cv2.destroyAllWindows()
             break
+    cv2.destroyAllWindows()
+    cv2.waitKey()
