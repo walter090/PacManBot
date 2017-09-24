@@ -3,24 +3,31 @@ import time
 import cv2
 import numpy as np
 import pyscreenshot as image_grab
+from tools.define_box import Definer
 
 
-def capture(origin, terminus, quit_on='q', verbose=False):
+def capture(box_end_start=None, quit_on='q', verbose=False):
     """Start capturing the designated part of the screen.
 
     Args:
-        origin: A tuple or list that contains two elements; this is the coordinate for
-            the starting point on the region to be read. This should be the top left
-            corner of the box.
-        terminus: A tuple or list that contains two elements; this is the coordinate for
-            the ending point on the region to be read. This should be the bottom right
-            corner of the box.
+        box_end_start: A list of four numbers that are the origin and terminal
+            coordinates of the capture area. If this argument is None, then
+            you will be prompt to use mouse drag to select an area on the screen.
         quit_on: Quit capturing on this keystroke, defaults q.
         verbose: Set to True to print time each frame.
 
     Returns:
         None
     """
+    if box_end_start is not None:
+        origin = box_end_start[:2]
+        terminus = box_end_start[2:]
+    else:
+        definer = Definer()
+        definer.define()
+        origin = definer.origin
+        terminus = definer.terminus
+
     while True:
         frame_start_time = time.time()
         screen = np.array(image_grab.grab(bbox=(*origin, *terminus)))
