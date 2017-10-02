@@ -173,3 +173,39 @@ def fully_conn(x,
             pass
 
         return output
+
+
+def lstm(x,
+         unit_size=512,
+         peepholes=True,
+         initializer=tf.random_normal_initializer,
+         state_is_tuple=True,
+         stacked_layers=4,
+         name='lstm'):
+    """LSTM layer
+
+    Args:
+        x: Input to the lstm.
+        unit_size: Cell size.
+        peepholes: Set to True to enable peepholes.
+        initializer: Initialization function for weights.
+        state_is_tuple: Set to True to return state as a tuple.
+        stacked_layers: Number of stacked lstm cells.
+        name: Variable scope name.
+
+    Returns:
+        outputs: Output from the RNN.
+        state: Final state.
+    """
+    with tf.variable_scope(name):
+        lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units=unit_size,
+                                            use_peepholes=peepholes,
+                                            initializer=initializer,
+                                            state_is_tuple=state_is_tuple)
+        stacked_lstm = tf.nn.rnn_cell.MultiRNNCell([lstm_cell for _ in range(stacked_layers)])
+        # outputs:
+        outputs, state = tf.nn.dynamic_rnn(inputs=tf.expand_dims(x, [0]),
+                                           cell=stacked_lstm,
+                                           time_major=False)
+
+        return outputs, state
