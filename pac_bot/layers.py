@@ -10,7 +10,7 @@ def conv_layer(x,
                pool_stride=None,
                alpha=0.1,
                name='conv',
-               padding='VALID',
+               padding='SAME',
                batchnorm=False):
     """Convolution-LReLU-max pooling layers.
 
