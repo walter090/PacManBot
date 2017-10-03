@@ -3,9 +3,8 @@ from . import layers
 
 
 class Network(object):
-    def __init__(self, action_size, name='network'):
-        with tf.variable_scope(name):
-            self.action_size = action_size
+    def __init__(self, action_size):
+        self.action_size = action_size
 
     @staticmethod
     def encoding_network(x, layers_config=None, activation='lrelu', name='encoding'):
