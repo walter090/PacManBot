@@ -4,8 +4,8 @@ from . import layers
 
 class Network(object):
     def __init__(self):
-        self.encoded = None
-        self.lstm_output = None
+        self._encoded = None
+        self._lstm_output = None
 
     def encoding_network(self, x, layers_config=None, activation='lrelu', name='encoding'):
         """Build the encoding network.
@@ -40,9 +40,9 @@ class Network(object):
                                                 activation=activation)
             flattened = layers.flatten(conv_output)
             fc = layers.fully_conn(x=flattened, num_output=516)
-            self.encoded = fc = layers.fully_conn(x=fc, num_output=256)
+            self._encoded = layers.fully_conn(x=fc, num_output=256)
 
-            return fc
+            return self._encoded
 
-    def lstm_network(self, x, action_size):
+    def lstm_network(self, x, action_size, cell_size=512):
         pass
