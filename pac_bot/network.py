@@ -3,11 +3,11 @@ from . import layers
 
 
 class Network(object):
-    def __init__(self, action_size):
-        self.action_size = action_size
+    def __init__(self):
+        self.encoded = None
+        self.lstm_output = None
 
-    @staticmethod
-    def encoding_network(x, layers_config=None, activation='lrelu', name='encoding'):
+    def encoding_network(self, x, layers_config=None, activation='lrelu', name='encoding'):
         """Build the encoding network.
 
         Args:
@@ -40,9 +40,9 @@ class Network(object):
                                                 activation=activation)
             flattened = layers.flatten(conv_output)
             fc = layers.fully_conn(x=flattened, num_output=516)
-            fc = layers.fully_conn(x=fc, num_output=256)
+            self.encoded = fc = layers.fully_conn(x=fc, num_output=256)
 
             return fc
 
-    def lstm_network(self):
-        raise NotImplementedError
+    def lstm_network(self, x, action_size):
+        pass
