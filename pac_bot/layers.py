@@ -11,7 +11,8 @@ def conv_layer(x,
                alpha=0.1,
                name='conv',
                padding='SAME',
-               batchnorm=False):
+               batchnorm=False,
+               activation='lrelu'):
     """Convolution-LReLU-max pooling layers.
 
         This function takes the input and returns the output of the result after
@@ -32,6 +33,7 @@ def conv_layer(x,
             name: Name of the variable scope.
             padding: Padding for the layers, default 'VALID'.
             batchnorm: Set True to use batch normalization at this layer.
+            activation: Choose activate function, defaults lrelu.
 
         Returns:
             Output tensor.
@@ -54,7 +56,8 @@ def conv_layer(x,
         if batchnorm:
             convoluted = batch_normalize(convoluted)
 
-        conv = lrelu(convoluted, alpha)
+        conv = tf.nn.elu(features=convoluted) if activation == 'elu' \
+            else lrelu(x=convoluted, alpha=alpha)
 
         if pool_ksize is not None and pool_stride is not None:
             pool_ksize = (1,) + pool_ksize + (1,)
