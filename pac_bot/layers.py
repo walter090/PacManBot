@@ -141,7 +141,7 @@ def fully_conn(x,
                num_output,
                name='fc',
                activation='lrelu',
-               output_layer=False,
+               logits_only=False,
                keep_prob=1.):
     """Fully connected layer, this is is last parts of convnet.
     Fully connect layer requires each image in the batch be flattened.
@@ -152,7 +152,7 @@ def fully_conn(x,
         name: Name for the fully connected layer variable scope.
         activation: Choose activation function, choose between 'sigmoid', 'lrelu', and 'elu',
             if any other value is passed, activation function will not be added.
-        output_layer: Set True to indicate that this is the output layer, and an acitivation
+        logits_only: Set True to indicate that this is the output layer, and an acitivation
             function will not be added; parameter activation will be ignored.
         keep_prob: Keep probability for dropout layers, if keep probability is 1
             there is no dropout. Defaults 1.
@@ -171,7 +171,7 @@ def fully_conn(x,
         output = tf.nn.bias_add(tf.matmul(x, weights), biases)
         output = tf.nn.dropout(output, keep_prob=keep_prob)
 
-        if output_layer:
+        if logits_only:
             pass
         elif activation == 'sigmoid':
             output = tf.sigmoid(output)
