@@ -141,6 +141,7 @@ def fully_conn(x,
                num_output,
                name='fc',
                activation='lrelu',
+               output_layer=False,
                keep_prob=1.):
     """Fully connected layer, this is is last parts of convnet.
     Fully connect layer requires each image in the batch be flattened.
@@ -149,8 +150,10 @@ def fully_conn(x,
         x: Input from the previous layer.
         num_output: Output size of the fully connected layer.
         name: Name for the fully connected layer variable scope.
-        activation: Set to True to add a leaky relu after fully connected
-            layer. Set this argument to False if this is the final layer.
+        activation: Choose activation function, choose between 'sigmoid', 'lrelu', and 'elu',
+            if any other value is passed, activation function will not be added.
+        output_layer: Set True to indicate that this is the output layer, and an acitivation
+            function will not be added; parameter activation will be ignored.
         keep_prob: Keep probability for dropout layers, if keep probability is 1
             there is no dropout. Defaults 1.
 
@@ -168,10 +171,14 @@ def fully_conn(x,
         output = tf.nn.bias_add(tf.matmul(x, weights), biases)
         output = tf.nn.dropout(output, keep_prob=keep_prob)
 
-        if activation == 'sigmoid':
+        if output_layer:
+            pass
+        elif activation == 'sigmoid':
             output = tf.sigmoid(output)
         elif activation == 'lrelu':
             output = lrelu(output)
+        elif activation == 'elu':
+            output = tf.nn.elu(output)
         else:
             pass
 
@@ -179,17 +186,17 @@ def fully_conn(x,
 
 
 def lstm(x,
-         unit_size=512,
+         cell_size=512,
          peepholes=True,
          initializer=tf.random_normal_initializer,
          state_is_tuple=True,
          stacked_layers=4,
          name='lstm'):
-    """LSTM layer
+    """RNN
 
     Args:
         x: Input to the lstm.
-        unit_size: Cell size.
+        cell_size: Cell size.
         peepholes: Set to True to enable peepholes.
         initializer: Initialization function for weights.
         state_is_tuple: Set to True to return state as a tuple.
@@ -201,7 +208,7 @@ def lstm(x,
         state: Final state.
     """
     with tf.variable_scope(name):
-        lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units=unit_size,
+        lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units=cell_size,
                                             use_peepholes=peepholes,
                                             initializer=initializer,
                                             state_is_tuple=state_is_tuple)
