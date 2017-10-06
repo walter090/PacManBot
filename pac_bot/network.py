@@ -1,10 +1,12 @@
 import tensorflow as tf
+
 from . import layers
 
 
 class Network(object):
     def __init__(self):
         self._encoded = None
+        self._lstm = None
         self._lstm_output = None
 
     def encoding_network(self, x, layers_config=None, activation='lrelu', name='encoding'):
@@ -44,5 +46,26 @@ class Network(object):
 
             return self._encoded
 
-    def lstm_network(self, x, action_size, cell_size=512):
-        pass
+    def lstm_network(self, x, actions, cell_size=512, stacked_layers=4, name='lstm'):
+        """Build the LSTM network.
+
+        Args:
+            x: Input tensor.
+            actions: List of available actions.
+            cell_size: LSTM cell size.
+            stacked_layers: Number of stacked LSTM cells.
+            name: Name for the variable scope.
+
+        Returns:
+
+        """
+        with tf.variable_scope(name):
+            self._lstm, _ = layers.lstm(x=x,
+                                        cell_size=cell_size,
+                                        stacked_layers=stacked_layers)
+            lstm_flattened = layers.flatten(self._lstm)
+            self._lstm_output = layers.fully_conn(lstm_flattened,
+                                                  num_output=len(actions),
+                                                  activation='softmax')
+
+            return self._lstm_output
