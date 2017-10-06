@@ -171,14 +171,17 @@ def fully_conn(x,
         output = tf.nn.bias_add(tf.matmul(x, weights), biases)
         output = tf.nn.dropout(output, keep_prob=keep_prob)
 
+        activations_options = {
+            'sigmoid': tf.sigmoid(output),
+            'lrelu': lrelu(output),
+            'elu': tf.nn.elu(output),
+            'softmax': tf.nn.softmax(output)
+        }
+
         if logits_only:
             pass
-        elif activation == 'sigmoid':
-            output = tf.sigmoid(output)
-        elif activation == 'lrelu':
-            output = lrelu(output)
-        elif activation == 'elu':
-            output = tf.nn.elu(output)
+        elif activation is not None:
+            output = activations_options[activation]
         else:
             pass
 
